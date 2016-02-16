@@ -1,0 +1,16 @@
+{
+  "name": "test_scraper",
+  "version": "1.0.0",
+  "description": "scrap NBA page",
+  "main": "scrap.js",
+  "dependencies":{
+    "nightmare": "*",
+    "vo": "*",
+    "mongoose": "*"
+  },
+  "scripts": {
+    "scrap": "node --harmony scrap.js"
+  },
+  "author": "Pau Fabregat",
+  "license": "ISC"
+}
