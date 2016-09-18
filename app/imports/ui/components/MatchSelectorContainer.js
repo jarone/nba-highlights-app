@@ -11,6 +11,6 @@ export const MatchSelectorContainer = createContainer(() => {
   return {
     loading,
     matchesExists,
-    matches: matchesExists ? matches.fetch() : {},
+    matches: matchesExists ? matches.fetch() : [],
   };
 }, MatchSelector);
