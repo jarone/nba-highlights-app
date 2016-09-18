@@ -77,7 +77,7 @@ function *run() {
                 var teamHome = document.querySelector('.nbaGIAwayT p').innerText;
                 var teamAway = document.querySelector('.nbaGIHomeT p').innerText;
 
-                var imgHome = document.querySelector('.nbaGIAwayT img').getAttribute('src');
+                var imgHome = document.querySelector('.nbaGIAwayT img').getAttribute('src'); //'.Final .nbaGIAwayT img' --> get normal pic
                 var imgAway = document.querySelector('.nbaGIHomeT img').getAttribute('src');
 
                 var videoLink = document.querySelector('video');
