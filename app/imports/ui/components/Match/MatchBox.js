@@ -11,6 +11,15 @@ export class MatchBox extends Component {
     };
   }
 
+	selectedMatch() {
+		const isSelected = !this.state.isSelected
+		const action = isSelected ? 'add' : 'remove'
+		this.props.playlistController(this.props.match.video, action);
+		this.setState({
+			isSelected: isSelected
+		})
+	}
+
 	render(){
     const teamAway = this.props.match.teams.away;
     const teamHome = this.props.match.teams.home;
@@ -30,7 +39,8 @@ export class MatchBox extends Component {
 		)
 
 		return (
-				<Col md={6} className={'match-box'}>
+				<Col md={6} className={'match-box'}
+							onClick={this.selectedMatch.bind(this)}>
 					<Row className={matchClass}>
 						<Col md={5} className='team-left'>
 							<Row>
