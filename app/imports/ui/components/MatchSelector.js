@@ -3,16 +3,19 @@ import React, { Component, PropTypes } from 'react';
 import _ from 'lodash';
 
 import { Video } from './Match/Video';
+import { MatchBox } from './Match/MatchBox';
 
 export class MatchSelector extends Component {
 	render(){
-		const videos = _.map(this.props.matches, (match, k) => {
-			return (<Video video={match.video} key={'video-'+ k}/>);
+		const boxes = _.map(this.props.matches, (match, k) => {
+			return (<MatchBox key={'box-'+ k}
+												match={match}
+												/>);
 		});
 		return(
-			<div>
-				{videos}
-			</div>
+			<Row>
+				{boxes}
+			</Row>
 		)
 	}
 };

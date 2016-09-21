@@ -1,0 +1,70 @@
+.match-box {
+  cursor: pointer;
+
+  .scoreboard {
+    height: 120px;
+    background: white;
+    margin: 10px;
+
+    div {
+      height: 100%;
+    }
+
+    &.selected {
+      border: 1px solid blue;
+    }
+  }
+
+  .team-left, .team-right {
+    height: 100%;
+  }
+
+  .box {
+    wdth: 120px;
+    text-align: center;
+    position: relative;
+    padding-top: 15px;
+
+    img, div {
+      margin: 0 auto;
+    }
+
+    div {
+      padding-top: 2px;
+    }
+
+
+  }
+
+  .team-left {
+    .team-name {
+      left: 60px;
+    }
+  }
+
+  .team-right {
+    .team-name {
+      right: 60px;
+    }
+  }
+
+  .score {
+    font-size: 25px;
+    text-align: center;
+    display : table;
+    div {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  .divider {
+    text-align: center;
+    font-size: 50px;
+    font-weight: 100;
+    color: #eee;
+    top:18%;
+  }
+
+
+}

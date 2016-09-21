@@ -18,7 +18,7 @@ aldeed:collection2
 dburles:collection-helpers
 mrt:moment
 meteorhacks:fast-render
-less@2.7.5
+less
 zimme:active-route
 
 cosmos:browserify
@@ -35,3 +35,4 @@ standard-minifier-js
 shell-server
 static-html
 react-meteor-data
+twbs:bootstrap

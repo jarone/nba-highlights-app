@@ -1,12 +1,13 @@
 import {Row, Col} from 'react-bootstrap';
 import React, { Component, PropTypes } from 'react';
+import classNames from 'classnames';
 
 export class MatchBox extends Component {
 	constructor(props) {
     super(props);
 
     this.state = {
-      isSelected:false
+      isSelected: false
     };
   }
 
@@ -22,23 +23,50 @@ export class MatchBox extends Component {
 		const nameAway = teamAway.name;
 		const nameHome = teamHome.name;
 
+		const matchClass = classNames(
+			'scoreboard', {
+				selected: this.state.isSelected
+			}
+		)
+
 		return (
-				<Row xs={4} className='matchBox'>
-					<div>
-						<Col xs={3}>
-							<img src={imgAway}/>
+				<Col md={6} className={'match-box'}>
+					<Row className={matchClass}>
+						<Col md={5} className='team-left'>
+							<Row>
+									<Col md={7}>
+										<div className='box'>
+											<img src={imgAway}/>
+											<div>
+												{nameAway}
+											</div>
+										</div>
+									</Col>
+									<Col md={5} className='score'>
+										<div>{scoreAway}</div>
+									</Col>
+							</Row>
 						</Col>
-						<Col xs={3}>
-							<div>{scoreAway}</div>
+						<Col md={2} className='divider'>
+								|
 						</Col>
-						<Col xs={3}>
-							<img src={imgHome}/>
+						<Col md={5} className='team-right'>
+							<Row>
+									<Col md={5} className='score'>
+										<div>{scoreHome}</div>
+									</Col>
+									<Col md={7}>
+										<div className='box'>
+											<img src={imgHome}/>
+											<div>
+												{nameHome}
+											</div>
+										</div>
+									</Col>
+							</Row>
 						</Col>
-						<Col xs={3}>
-							<div>{scoreHome}</div>
-						</Col>
-					</div>
-				</Row>
+					</Row>
+				</Col>
 		)}
 };
 
