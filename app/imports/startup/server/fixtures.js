@@ -9,12 +9,12 @@ Meteor.startup(() => {
         teams: {
           'home':{
               'score': '118',
-              'name': 'HOU',
+              'name': 'Rockets',
               'img': 'http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/gameinfo/teamlogos/HOU.gif'
           },
           'away':{
               'score': '110',
-              'name': 'OKC',
+              'name': 'Thunder',
               'img': 'http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/gameinfo/teamlogos/OKC.gif'
           }
         },
@@ -25,12 +25,12 @@ Meteor.startup(() => {
       teams: {
         'home':{
             'score': '112',
-            'name': 'CLE',
+            'name': 'Cavaliers',
             'img': 'http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/gameinfo/teamlogos/CLE.gif'
         },
         'away':{
             'score': '103',
-            'name': 'CHA',
+            'name': 'Hornets',
             'img': 'http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/gameinfo/teamlogos/CHA.gif'
         }
       },
@@ -41,12 +41,12 @@ Meteor.startup(() => {
       teams: {
         'home':{
             'score': '87',
-            'name': 'NYK',
+            'name': 'Knicks',
             'img': 'http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/gameinfo/teamlogos/NYK.gif'
         },
         'away':{
             'score': '92',
-            'name': 'IND',
+            'name': 'Pacers',
             'img': 'http://i.cdn.turner.com/nba/nba/.element/img/2.0/sect/gameinfo/teamlogos/IND.gif'
         }
       },
