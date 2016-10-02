@@ -14,7 +14,7 @@ export class MatchBox extends Component {
 	selectedMatch() {
 		const isSelected = !this.state.isSelected
 		const action = isSelected ? 'add' : 'remove'
-		this.props.playlistController(this.props.match.video, action);
+		this.props.onSelect(this.props.match.video, action);
 		this.setState({
 			isSelected: isSelected
 		})

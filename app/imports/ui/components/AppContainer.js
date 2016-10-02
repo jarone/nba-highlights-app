@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Matches } from '/imports/api/matches.js';
-import { MatchSelector } from './MatchSelector';
+import { App } from './App';
 
-export const MatchSelectorContainer = createContainer(() => {
+export const AppContainer = createContainer(() => {
   const matchesHandle = Meteor.subscribe('matches');
   const loading = !matchesHandle.ready();
   const matches = Matches.find();
@@ -13,4 +13,4 @@ export const MatchSelectorContainer = createContainer(() => {
     matchesExists,
     matches: matchesExists ? matches.fetch() : [],
   };
-}, MatchSelector);
+}, App);
