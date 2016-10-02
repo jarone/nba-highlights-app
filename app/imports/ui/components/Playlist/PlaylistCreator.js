@@ -1,6 +1,5 @@
 import { Row, Col, Button } from 'react-bootstrap';
 import React, { Component, PropTypes } from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from 'lodash';
 
 
