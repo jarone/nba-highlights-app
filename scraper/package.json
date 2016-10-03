@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "scrap NBA page",
   "main": "scrap.js",
-  "dependencies":{
+  "dependencies": {
+    "lodash": "^4.16.2",
+    "mongoose": "*",
     "nightmare": "*",
-    "vo": "*",
-    "mongoose": "*"
+    "request": "^2.75.0",
+    "request-promise": "^4.1.1",
+    "vo": "*"
   },
   "scripts": {
     "scrap": "node --harmony scrap.js"

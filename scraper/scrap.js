@@ -1,132 +1,121 @@
-// getting-started.js
-var mongoose = require('mongoose');
+"use strict"
+const mongoose = require('mongoose');
+const Nightmare = require('nightmare');
+const rp = require('request-promise');
+const _ = require('lodash');
+
+const BASE_URL = 'http://global.nba.com';
+
+const getTeamImg = (team) => {
+  return BASE_URL + '/media/img/teams/logos/' + team + '_logo.svg';
+}
+
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/test');
 
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 
-var matchSchema = mongoose.Schema({
+const matchSchema = mongoose.Schema({
   teams: {
-    'home':{
-        'score': String,
-        'name': String,
-        'img': String
+    home:{
+        score: String,
+        name: String,
+        img: String
     },
-    'away':{
-        'score': String,
-        'name': String,
-        'img': String
+    away:{
+        score: String,
+        name: String,
+        img: String
     }
   },
+  highlights_page_link: String,
   video: String,
   date: Number
 });
 
-var Match = mongoose.model('Match', matchSchema);
+const Match = mongoose.model('Match', matchSchema);
 
+//get dayly json file for the games
+const options = {
+    uri: `${BASE_URL}/statsm2/scores/daily.json?gameDate=2016-10-01`,
+    json: true // Automatically parses the JSON string in the response
+};
 
-var Nightmare = require('nightmare');
-var path = require('path');
-var vo = require('vo');
+rp(options)
+    .then((nbaInfo) => {
+        const games = nbaInfo.payload.date.games;
+        const gamesInfo = [];
+        if(!_.isEmpty(games)) {
+              _.forEach(games, (game) => {
+                if(!_.isEmpty(game.urls)) {
+                  let highLightsPageLink = null;
+                  _.forEach(game.urls, (url) => {
+                    if(_.toLower(url.type) == 'highlights') {
+                      highLightsPageLink = url.value
+                    }
+                  })
 
-var x = Date.now();
+                  const scoreHome = game.homeTeam.score.score;
+                  const teamHome = game.homeTeam.profile.abbr;
 
-//WITH GENERATORS
-vo(run)(function(err, result) {
-  if (err) console.log(err);
-});
+                  const scoreAway = game.awayTeam.score.score;
+                  const teamAway = game.awayTeam.profile.abbr;
 
-console.log('what up');
+                  const utcMillis = game.profile.utcMillis;
+                  const gameInfo = {
+                      teams:{
+                          home:{
+                              score: scoreHome,
+                              name: teamHome,
+                              img: getTeamImg(teamHome)
+                          },
+                          away:{
+                              score: scoreAway,
+                              name: teamAway,
+                              img: getTeamImg(teamAway)
+                          }
 
-function *run() {
-  var nightmare = Nightmare({});
-  var info = yield nightmare
-    .goto('http://www.nba.com')
-     .wait(5000)
-    .click('#global-nav-1 a')
-     .wait(5000)
-    .evaluate(function() {
-
-        var rawDate = document.querySelector('.day .date').innerText;
-        var currentYear = new Date().getFullYear();
-        var date = new Date(rawDate + ' ' + currentYear).getTime();
-       var elements = document.querySelectorAll('.gamestrip .day .tile.final a.gameinfo');
-
-       var hrefs = [];
-       for (var i = 0, len = elements.length; i < len; i++) {
-            hrefs[i] = elements[i].getAttribute('href')
-        }
-       return {'links':hrefs, 'date':date}
-
-    });
-
-    var links = info.links;
-  console.log(info);
-
-  for(var a=0, len = links.length; a < len; a++){
-
-    var matches = [];
-    var data = yield nightmare
-            .goto('http://www.nba.com'+links[a])
-            .wait(5000) //TODO for some reason it does not want to evaluate again here. Not launching Electron app the way it used to...
-            .evaluate(function() {
-
-                var scoreAway = document.querySelector('.teamAway').innerText;
-                var scoreHome = document.querySelector('.teamHome').innerText;
-
-                var teamHome = document.querySelector('.nbaGIAwayT p').innerText;
-                var teamAway = document.querySelector('.nbaGIHomeT p').innerText;
-
-                var imgHome = document.querySelector('.nbaGIAwayT img').getAttribute('src'); //'.Final .nbaGIAwayT img' --> get normal pic
-                var imgAway = document.querySelector('.nbaGIHomeT img').getAttribute('src');
-
-                var videoLink = document.querySelector('video');
-                if(videoLink) videoLink = videoLink.getAttribute('src'); //On the electron browser it appears in a video tag instead of an object tag
-                else videoLink = null;
-
-                var gameInfo={
-                    'teams':{
-                        'home':{
-                            'score': scoreHome,
-                            'name': teamHome,
-                            'img': imgHome
-                        },
-                        'away':{
-                            'score': scoreAway,
-                            'name': teamAway,
-                            'img': imgAway
-                        }
-
-                    },
-                    'video': videoLink
+                      },
+                      highlights_page_link: highLightsPageLink,
+                      date: utcMillis
+                  }
+                  gamesInfo.push(gameInfo);
                 }
-                return gameInfo
-            })
+            });
+        }
 
-        data.date = info.date;
-        var m = new Match(data);
-        m.save(function (err) {
-          if (err) {
-            return err;
-          }
-          else {
-            console.log("Match saved");
-          }
-        });
-        console.log(data);
-
-  }
-
-
-  yield nightmare.end();
-  console.log('we finished');
-
-  //TODO kill child processes --> solution install npm as non root
-  // var proc = require('child_process').spawn(path.join(__dirname, "node_modules/nightmare/lib/runner.js")); //this kills remaining child processes a.k.a electron
-  // process.on('exit', function(){
-      // proc.kill('SIGINT');
-  // });
-
-  //process.exit(); //TODO delay the execution to allow th elast match to be saved
-
-}
+        //nightmare stuff
+        const nightmare = Nightmare();
+        gamesInfo.reduce((accumulator, gameInfo) => {
+              return accumulator.then((results) => {
+                return nightmare
+                  .goto(gameInfo.highlights_page_link)
+                  .wait(5000)
+                  .evaluate(() => {
+                      let videoLink = document.querySelector('video');
+                      if(videoLink) videoLink = videoLink.getAttribute('src');
+                      else videoLink = null;
+                      return videoLink
+                  }).then((videoLink) => {
+                    gameInfo.video = videoLink
+                    results.push(gameInfo);
+                    const m = new Match(gameInfo);
+                    m.save((err) => {
+                      if (err) return err;
+                      console.log("Match saved");
+                    });
+                    return results
+                  })
+                  .catch((error) => {
+                    console.error('Failed:', error);
+                  });
+              });
+            }, Promise.resolve([])).then((results) => {
+                console.dir(results);
+                nightmare.end().then();
+            });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
